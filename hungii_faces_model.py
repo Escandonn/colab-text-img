@@ -14,7 +14,8 @@ class HungiiFacesModel:
         )
         response.raise_for_status()
         import base64
-        image_data = base64.b64decode(response.json()["generated_images"][0])
+        image_json = response.json()
+        image_data = base64.b64decode(image_json["generated_images"][0]["image"])
         image = Image.frombytes("RGBA", (64, 64), image_data)
         return image
 
