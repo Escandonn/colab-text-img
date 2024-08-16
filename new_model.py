@@ -15,16 +15,11 @@ class NewModel:
         return response.content
 
     def text_to_image(self, text):
-        image_bytes = self.query({"inputs": text})
+        response = self.query({"inputs": text})
+        response.raise_for_status()
         import io
         from PIL import Image
-        image = Image.open(io.BytesIO(image_bytes))
-        return image
-        response.raise_for_status()
-        import base64
-        image_json = response.json()
-        image_data = base64.b64decode(image_json["generated_images"][0]["image"])
-        image = Image.frombytes("RGBA", (64, 64), image_data)
+        image = Image.open(io.BytesIO(response.content))
         return image
 
     def save_image(self, image, filename):
