@@ -2,16 +2,24 @@ import os
 import requests
 from PIL import Image, ImageDraw, ImageFont
 
+API_URL = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
+headers = {"Authorization": "Bearer hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}
+
 class NewModel:
     def __init__(self):
-        self.api_key = "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"
+        self.api_url = API_URL
+        self.headers = headers
+
+    def query(self, payload):
+        response = requests.post(self.api_url, headers=self.headers, json=payload)
+        return response.content
 
     def text_to_image(self, text):
-        response = requests.post(
-            f"https://api.hungii faces.com/v1/text-to-image",
-            headers={"Authorization": f"Bearer {self.api_key}"},
-            json={"text": text}
-        )
+        image_bytes = self.query({"inputs": text})
+        import io
+        from PIL import Image
+        image = Image.open(io.BytesIO(image_bytes))
+        return image
         response.raise_for_status()
         import base64
         image_json = response.json()
