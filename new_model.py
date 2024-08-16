@@ -29,3 +29,9 @@ class NewModel:
 
     def save_image(self, image, filename):
         image.save(filename)
+    def display_image(self, filename):
+        from matplotlib.pyplot import imshow, axis
+        from matplotlib.image import imread
+        img = imread(filename)
+        imshow(img)
+        axis('off')
