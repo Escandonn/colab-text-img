@@ -5,21 +5,26 @@ from PIL import Image, ImageDraw, ImageFont
 API_URL = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
 headers = {"Authorization": "Bearer hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}
 
+import torch
+from diffusers import StableDiffusionXLImg2ImgPipeline
+from diffusers.utils import load_image
+
 class NewModel:
     def __init__(self):
-        self.api_url = API_URL
-        self.headers = headers
+        self.pipe = StableDiffusionXLImg2ImgPipeline.from_pretrained(
+            "stabilityai/stable-diffusion-xl-refiner-1.0", torch_dtype=torch.float16, variant="fp16", use_safetensors=True
+        )
+        self.pipe = self.pipe.to("cuda")
 
     def query(self, payload):
         response = requests.post(self.api_url, headers=self.headers, json=payload)
         return response.content
 
     def text_to_image(self, text):
-        response = self.query({"inputs": text})
-        response.raise_for_status()
-        import io
-        from PIL import Image
-        image = Image.open(io.BytesIO(response.content))
+        url = "https://huggingface.co/datasets/patrickvonplaten/images/resolve/main/aa_xl/000000009.png"
+        init_image = load_image(url).convert("RGB")
+        prompt = text
+        image = self.pipe(prompt, image=init_image).images
         return image
 
     def save_image(self, image, filename):
