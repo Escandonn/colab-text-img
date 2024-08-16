@@ -21,9 +21,9 @@ class NewModel:
         return response.content
 
     def text_to_image(self, text):
-        url = "https://huggingface.co/datasets/patrickvonplaten/images/resolve/main/aa_xl/000000009.png"
+        # No initial image, let the model generate a unicorn
         init_image = load_image(url).convert("RGB")
-        prompt = text
+        prompt = "a beautiful unicorn"
         image = self.pipe(prompt, image=init_image).images
         return image
 
