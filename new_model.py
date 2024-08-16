@@ -22,7 +22,7 @@ class NewModel:
 
     def text_to_image(self, text):
         # No initial image, let the model generate a unicorn
-        init_image = load_image(url).convert("RGB")
+        init_image = None
         prompt = "a beautiful unicorn"
         image = self.pipe(prompt, image=init_image).images
         return image
