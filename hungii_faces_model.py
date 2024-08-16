@@ -3,7 +3,8 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 
 class HungiiFacesModel:
-    def __init__(self, api_key):
+    def __init__(self):
+        self.api_key = "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"
         self.api_key = api_key
 
     def text_to_image(self, text):
